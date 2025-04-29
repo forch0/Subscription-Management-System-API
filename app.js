@@ -1,9 +1,14 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';    
-import cors from 'cors';
-    
 
-applescript.get('/', (req, res) => {
+    
+const app = express();
+
+app.get('/', (req, res) => {
     res.send('Hello World!');
-})
+});
+
+app.listen(3000, () => {
+    console.log(`Server running at http://localhost:3000/`);
+});
+
+export default app;
