@@ -12,3 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Router } from "express";
+
+const userRouter = Router();
+
+userRouter.get('/users', (req, res) => 
+    {res.send({ title: 'Get all users'})
+;});
+
+userRouter.get('/:id', (req, res) => {
+    res.send({ title: 'Get a user'});
+});
+
+userRouter.post('/:id', (req, res) => {
+    res.send({ title: 'Create a user'});
+});
+
+userRouter.put('/:id', (req, res) => {
+    res.send({ title: 'Update a user'});
+});
+
+
+userRouter.delete('/:id', (req, res) => {
+    res.send({ title: 'Delete a user'});
+});
+
+export default userRouter;
