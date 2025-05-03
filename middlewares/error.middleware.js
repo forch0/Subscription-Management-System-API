@@ -11,52 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 const errorMiddleware = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        status: 'error',
-        message: 'Internal Server Error',
-        error: err.message,
-    });
-
-    // mongoos duplicate key error
-    if (err.name === 'MongoError' && err.code === 11000) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Duplicate key error',
-            error: err.message,
-        });
-    }   
-
-    // mongoose validation error
-    if (err.name === 'ValidationError') {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Validation error',
-            error: err.message,
-        });
+    try {
+      let error = { ...err };
+  
+      error.message = err.message;
+  
+      console.error(err);
+  
+      // Mongoose bad ObjectId
+      if (err.name === 'CastError') {
+        const message = 'Resource not found';
+        error = new Error(message);
+        error.statusCode = 404;
+      }
+  
+      // Mongoose duplicate key
+      if (err.code === 11000) {
+        const message = 'Duplicate field value entered';
+        error = new Error(message);
+        error.statusCode = 400;
+      }
+  
+      // Mongoose validation error
+      if (err.name === 'ValidationError') {
+        const message = Object.values(err.errors).map(val => val.message);
+        error = new Error(message.join(', '));
+        error.statusCode = 400;
+      }
+  
+      res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Server Error' });
+    } catch (error) {
+      next(error);
     }
-
-    // mongoose cast error  
-    if (err.name === 'CastError') {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Cast error',
-            error: err.message,
-        });
-    }
-
-    // mongoose document not found error
-    if (err.name === 'DocumentNotFoundError') {
-        return res.status(404).json({
-            status: 'error',
-            message: 'Document not found',
-            error: err.message,
-        });
-    }
-
-    
-}
-
-export default errorMiddleware;
+  };
+  
+  export default errorMiddleware;
