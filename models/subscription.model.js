@@ -96,6 +96,8 @@ if (!this.renewalDate){
         
 ;}
 
+export const Subscription = mongoose.model('Subscription', subscriptionSchema); 
+
 
 
     
