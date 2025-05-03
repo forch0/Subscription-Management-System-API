@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {config} from 'dotenv';
-import e from 'express';
+import mongoose from 'mongoose';
+import {DB_URI, NODE_ENV} from '../config/env.js';
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+if (!DB_URI) {
+    throw new Error('DB_URI is not defined in the environment variables.');
+}
+const connectDB = async () => {
+    try {
+        await mongoose.connect(DB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log(`MongoDB connected in ${NODE_ENV} mode`);
+    } catch (error) {
+        console.error('MongoDB connection error:', error.message);
+        process.exit(1); // Exit process with failure
+    }
+};
 
-export const {PORT, NODE_ENV, DB_URI} = process.env;
