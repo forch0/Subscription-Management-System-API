@@ -12,40 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Router } from "express";
+import { Router } from 'express';
+import authorize from '../middlewares/auth.middleware.js'
+import {
+  createSubscription,
+  getUserSubscriptions,
+} from '../controllers/subscription.controller.js'
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', (req, res) => {
-    res.send({ title: 'Get all subscriptions' });
-});
+subscriptionRouter.get('/', (req, res) => res.send({ title: 'GET all subscriptions' }));
 
-subscriptionRouter.get('/:id', (req, res) => {
-    res.send({ title: 'Get a subscription' });
-});
+subscriptionRouter.get('/:id', (req, res) => res.send({ title: 'GET subscription details' }));
 
-subscriptionRouter.post('/', (req, res) => {
-    res.send({ title: 'Create a subscription' });
-});
+subscriptionRouter.post('/', authorize, createSubscription);
 
-subscriptionRouter.put('/:id', (req, res) => {
-    res.send({ title: 'Update a subscription' });
-});
+subscriptionRouter.put('/:id', (req, res) => res.send({ title: 'UPDATE subscription' }));
 
-subscriptionRouter.delete('/:id', (req, res) => {
-    res.send({ title: 'Delete a subscription' });
-});
+subscriptionRouter.delete('/:id', (req, res) => res.send({ title: 'DELETE subscription' }));
 
-subscriptionRouter.get('/user/:id', (req, res) => {
-    res.send({ title: 'Get all subscriptions for a user' });
-});
+subscriptionRouter.get('/user/:id', authorize, getUserSubscriptions);
 
-subscriptionRouter.put('/user/:id/cancel', (req, res) => {
-    res.send({ title: 'Cancel a subscription for a user' });
-});
+subscriptionRouter.put('/:id/cancel', (req, res) => res.send({ title: 'CANCEL subscription' }));
 
-subscriptionRouter.get('/upcoming-renewals', (req, res) => {
-    res.send({ title: 'Get all upcoming renewals' });
-});
+subscriptionRouter.get('/upcoming-renewals', (req, res) => res.send({ title: 'GET upcoming renewals' }));
 
 export default subscriptionRouter;

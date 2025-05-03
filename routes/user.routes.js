@@ -12,29 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Router } from "express";
+
+import { Router } from 'express';
+
+import authorize from '../middlewares/auth.middleware.js'
+import { getUser, getUsers } from '../controllers/user.controller.js'
 
 const userRouter = Router();
 
-userRouter.get('/users', (req, res) => 
-    {res.send({ title: 'Get all users'})
-;});
+userRouter.get('/', getUsers);
 
-userRouter.get('/:id', (req, res) => {
-    res.send({ title: 'Get a user'});
-});
+userRouter.get('/:id', authorize, getUser);
 
-userRouter.post('/:id', (req, res) => {
-    res.send({ title: 'Create a user'});
-});
+userRouter.post('/', (req, res) => res.send({ title: 'CREATE new user' }));
 
-userRouter.put('/:id', (req, res) => {
-    res.send({ title: 'Update a user'});
-});
+userRouter.put('/:id', (req, res) => res.send({ title: 'UPDATE user' }));
 
-
-userRouter.delete('/:id', (req, res) => {
-    res.send({ title: 'Delete a user'});
-});
+userRouter.delete('/:id', (req, res) => res.send({ title: 'DELETE user' }));
 
 export default userRouter;
