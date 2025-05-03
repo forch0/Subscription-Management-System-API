@@ -12,15 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { config } from 'dotenv';
+import arcjet, { shield, detectBot, tokenBucket } from "@arcjet/node";
+import { ARCJET_KEY } from './env.js'
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+const aj = arcjet({
+  key: ARCJET_KEY,
+  characteristics: ["ip.src"],
+  rules: [
+    shield({ mode: "LIVE" }),
+    detectBot({
+      mode: "LIVE",
+      allow: [ "CATEGORY:SEARCH_ENGINE" ],
+    }),
+    tokenBucket({
+      mode: "LIVE",
+      refillRate: 5, // Refill 5 tokens per interval
+      interval: 10, // Refill every 10 seconds
+      capacity: 10, // Bucket capacity of 10 tokens
+    }),
+  ],
+});
 
-export const {
-  PORT, NODE_ENV, SERVER_URL,
-  DB_URI,
-  JWT_SECRET, JWT_EXPIRES_IN,
-  ARCJET_ENV, ARCJET_KEY,
-  QSTASH_TOKEN, QSTASH_URL,
-  EMAIL_PASSWORD,
-} = process.env;
+export default aj;

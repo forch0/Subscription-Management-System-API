@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { config } from 'dotenv';
+import nodemailer from 'nodemailer';
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+import { EMAIL_PASSWORD } from './env.js'
 
-export const {
-  PORT, NODE_ENV, SERVER_URL,
-  DB_URI,
-  JWT_SECRET, JWT_EXPIRES_IN,
-  ARCJET_ENV, ARCJET_KEY,
-  QSTASH_TOKEN, QSTASH_URL,
-  EMAIL_PASSWORD,
-} = process.env;
+export const accountEmail = 'javascriptmastery00@gmail.com';
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: accountEmail,
+    pass: EMAIL_PASSWORD
+  }
+})
+
+export default transporter;

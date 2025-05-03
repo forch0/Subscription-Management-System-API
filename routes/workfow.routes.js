@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { config } from 'dotenv';
+import { Router} from 'express';
+import { sendReminders } from '../controllers/workflow.controller.js'
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+const workflowRouter = Router();
 
-export const {
-  PORT, NODE_ENV, SERVER_URL,
-  DB_URI,
-  JWT_SECRET, JWT_EXPIRES_IN,
-  ARCJET_ENV, ARCJET_KEY,
-  QSTASH_TOKEN, QSTASH_URL,
-  EMAIL_PASSWORD,
-} = process.env;
+workflowRouter.post('/subscription/reminder', sendReminders);
+
+export default workflowRouter;

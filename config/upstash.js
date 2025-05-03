@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { config } from 'dotenv';
+import { Client as WorkflowClient } from '@upstash/workflow';
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+import { QSTASH_TOKEN, QSTASH_URL } from './env.js';
 
-export const {
-  PORT, NODE_ENV, SERVER_URL,
-  DB_URI,
-  JWT_SECRET, JWT_EXPIRES_IN,
-  ARCJET_ENV, ARCJET_KEY,
-  QSTASH_TOKEN, QSTASH_URL,
-  EMAIL_PASSWORD,
-} = process.env;
+export const workflowClient = new WorkflowClient({
+  baseUrl: QSTASH_URL,
+  token: QSTASH_TOKEN,
+});
